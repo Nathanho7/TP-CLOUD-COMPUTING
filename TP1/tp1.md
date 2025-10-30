@@ -320,6 +320,147 @@ Successfully installed Flask-3.1.2 Flask-SQLAlchemy-3.1.1 PyMySQL-1.1.2 blinker-
 
 # C. Configuration de l'application
 
+🌞 Configuration de l'application
+
+```sh
+  GNU nano 7.2                                                                           /opt/meow/.env
+# Flask Configuration
+FLASK_SECRET_KEY=<ancaraaaa>
+FLASK_DEBUG=False
+FLASK_HOST=0.0.0.0
+FLASK_PORT=8000
+
+# Database Configuration
+DB_HOST=10.0.0.8
+DB_PORT=3306
+DB_NAME=meow
+DB_USER=meow
+DB_PASSWORD=< they know the name >
+
+```
+
+# Gestion de users et de droits
+
+🌞 Gestion de users et de droits
+
+```sh
+gusta@azure1:/opt/meow$ sudo useradd -m -s /bin/bash webapp
+gusta@azure1:/opt/meow$ grep webapp /etc/passwd
+webapp:x:1001:1001::/home/webapp:/bin/bash
+gusta@azure1:/opt/meow$ sudo chown -R webapp:webapp /opt/meow
+gusta@azure1:/opt/meow$ ls -l
+total 32
+-rwxr-xr-x 1 webapp webapp 3827 Oct 30 09:37 app.py
+drwxr-xr-x 2 webapp webapp 4096 Oct 30 09:44 bin
+-rwxr-xr-x 1 webapp webapp  223 Oct 30 09:37 docker-compose.yml
+drwxr-xr-x 4 webapp webapp 4096 Oct 30 09:44 include
+drwxr-xr-x 3 webapp webapp 4096 Oct 30 09:41 lib
+lrwxrwxrwx 1 webapp webapp    3 Oct 30 09:41 lib64 -> lib
+-rwxr-xr-x 1 webapp webapp  148 Oct 30 09:43 pyvenv.cfg
+-rwxr-xr-x 1 webapp webapp   58 Oct 30 09:37 requirements.txt
+drwxr-xr-x 2 webapp webapp 4096 Oct 30 09:37 templates
+gusta@azure1:/opt/meow$ sudo chmod -R o-rwx /opt/meow
+gusta@azure1:/opt/meow$ ls -ld /opt/meow
+drwxr-x--- 6 webapp webapp 4096 Oct 30 09:52 /opt/meow
+gusta@azure1:/opt/meow$ ls -l
+ls: cannot open directory '.': Permission denied
+gusta@azure1:/opt/meow$
+```
+
+# E. Création d'un service webapp.service pour lancer l'application
+
+🌞 Création d'un service webapp.service pour lancer l'application
+
+```sh
+gusta@azure1:/opt/meow$ sudo nano /etc/systemd/system/webapp.service
+gusta@azure1:/opt/meow$ sudo cat /etc/systemd/system/webapp.service
+[Unit]
+Description=Super Webapp MEOW
+
+[Service]
+User=webapp
+WorkingDirectory=/tmp/app
+ExecStart=/tmp/app/bin/python app.py
+
+[Install]
+WantedBy=multi-user.target
+gusta@azure1:/opt/meow$ sudo systemctl daemon-reload
+```
+
+# F. Ouverture du port dans le(s) firewall(s)
+
+🌞 Ouverture du port80 dans le(s) firewall(s)
+
+```sh
+● webapp.service - Super Webapp MEOW
+     Loaded: loaded (/etc/systemd/system/webapp.service; disabled; preset: enabled)
+     Active: active (running) since Thu 2025-10-30 11:21:21 UTC; 1min 59s ago
+   Main PID: 13004 (python)
+      Tasks: 1 (limit: 993)
+     Memory: 41.9M (peak: 43.9M)
+        CPU: 618ms
+     CGroup: /system.slice/webapp.service
+             └─13004 /opt/meow/bin/python app.py
+
+Oct 30 11:21:21 azure1 systemd[1]: Started webapp.service - Super Webapp MEOW.
+Oct 30 11:21:22 azure1 python[13004]:  * Serving Flask app 'app'
+Oct 30 11:21:22 azure1 python[13004]:  * Debug mode: off
+Oct 30 11:21:22 azure1 python[13004]: WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+Oct 30 11:21:22 azure1 python[13004]:  * Running on all addresses (0.0.0.0)
+Oct 30 11:21:22 azure1 python[13004]:  * Running on http://127.0.0.1:8000
+Oct 30 11:21:22 azure1 python[13004]:  * Running on http://10.0.0.5:8000
+Oct 30 11:21:22 azure1 python[13004]: Press CTRL+C to quit
+
+gusta@azure1:~$ sudo ss -lnpt | grep 8000
+LISTEN 0      128          0.0.0.0:8000      0.0.0.0:*    users:(("python",pid=13004,fd=4))
+
+gusta@azure1:~$ sudo ufw status
+Status: inactive
+
+uwf est off donc j'ai activé le port 8000 depuis la web ui , je peux donc tester lappli et envoyez plien de messages sympa question d'etre chill. 
+```
+
+# 3. Visitez l'application¶
+
+🌞 L'application devrait être fonctionnelle sans soucis à partir de là
+
+```sh
+gusta@azure1:~$ curl http://20.19.160.221:8000/ | head -n 20
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 12566  100 12566    0     0  2677k      0 --:--:-- --:--:-- --:--:-- 3067k
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purr Messages - Cat Message Board</title>
+    <style>
+        /* Modern CSS with cat-themed design */
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffd166;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --cat-paw: #ff9a8b;
+        }
+
+        * {
+            margin: 0;
+
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
