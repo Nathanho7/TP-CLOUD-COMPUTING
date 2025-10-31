@@ -462,6 +462,169 @@ gusta@azure1:~$ sudo chmod 700 /usr/local/bin/get_secrets.sh
 🌞 Ajouter le script en ExecStartPre= dans webapp.service
 
 ```sh
+[Unit]
+Description=Super Webapp MEOW
+
+[Service]
+User=webapp
+WorkingDirectory=/opt/meow
+ExecStartPre=/usr/local/bin/get_secrets.sh
+ExecStart=/opt/meow/bin/python app.py
+EnvironmentFile=/opt/meow/.env
+
+[Install]
+WantedBy=multi-user.target
+
+```
+
+🌞 Prouvez que la ligne en ExecStartPre= a bien été exécutée
+
+```sh
+gusta@azure1:~$ sudo systemctl status webapp
+● webapp.service - Super Webapp MEOW
+     Loaded: loaded (/etc/systemd/system/webapp.service; disabled; preset: enabled)
+     Active: active (running) since Fri 2025-10-31 07:52:26 UTC; 37s ago
+    Process: 9781 ExecStartPre=/usr/local/bin/get_secrets.sh (code=exited, status=0/SUCCESS)
+   Main PID: 9829 (python)
+      Tasks: 1 (limit: 993)
+     Memory: 41.6M (peak: 56.5M)
+        CPU: 2.673s
+     CGroup: /system.slice/webapp.service
+             └─9829 /opt/meow/bin/python app.py
+```
+- Ficher .env
+
+  *Avant
+  ```sh
+# Flask Configuration
+FLASK_SECRET_KEY=ewnFw95H7qBeGiVvkQl9YmnJohW6NCMMqR0arxfnWYASeCDvzwQwzLxMCboAOi3e
+FLASK_DEBUG=False
+FLASK_HOST=0.0.0.0
+FLASK_PORT=8000
+
+# Database Configuration
+DB_HOST=10.0.0.8
+DB_PORT=3306
+DB_NAME=meow_database
+DB_USER=meow
+DB_PASSWORD=ancaraaaa
+gusta@azure1:~$ sudo cat /opt/meow/.env | grep DB_PASSWORD
+DB_PASSWORD=meow
+```
+
+*Apres modif
+```sh
+gusta@azure1:~$ sudo cat /opt/meow/.env | grep DB_PASSWORD
+DB_PASSWORD=meow
+```
+
+
+# C. Secret Flask
+
+🌞 Intégrez la gestion du secret Flask dans votre script get_secrets.sh
+
+```sh
+gusta@azure1:~$ az keyvault secret set --vault-name secrettVaultt --name flasksecrett --value "yzbDbWJRHT7RX9yC9AXmjri9p6DQ7ONiyc+l8r1ytd0="
+{
+  "attributes": {
+    "created": "2025-10-31T15:38:57+00:00",
+    "enabled": true,
+    "expires": null,
+    "notBefore": null,
+    "recoverableDays": 90,
+    "recoveryLevel": "Recoverable+Purgeable",
+    "updated": "2025-10-31T15:38:57+00:00"
+  },
+  "contentType": null,
+  "id": "https://secrettvaultt.vault.azure.net/secrets/flasksecrett/ca0421a0afdc4db793bb3f9bb1da43c2",
+  "kid": null,
+  "managed": null,
+  "name": "flasksecrett",
+  "tags": {
+    "file-encoding": "utf-8"
+  },
+  "value": "yzbDbWJRHT7RX9yC9AXmjri9p6DQ7ONiyc+l8r1ytd0="
+}
+```
+
+🌞 Redémarrer le service
+```sh
+gusta@azure1:~$ sudo systemctl status webapp
+● webapp.service - Super Webapp MEOW
+     Loaded: loaded (/etc/systemd/system/webapp.service; disabled; preset: enabled)
+     Active: active (running) since Fri 2025-10-31 15:31:01 UTC; 7s ago
+    Process: 15601 ExecStartPre=/usr/local/bin/get_secrets.sh (code=exited, status=0/SUCCESS)
+   Main PID: 15676 (python)
+      Tasks: 1 (limit: 993)
+     Memory: 41.0M (peak: 56.9M)
+        CPU: 3.762s
+     CGroup: /system.slice/webapp.service
+             └─15676 /opt/meow/bin/python app.py
+
+Oct 31 15:30:58 azure1 get_secrets.sh[15605]:     }
+Oct 31 15:30:58 azure1 get_secrets.sh[15605]:   }
+Oct 31 15:30:58 azure1 get_secrets.sh[15605]: ]
+Oct 31 15:31:00 azure1 get_secrets.sh[15601]:  DB_PASSWORD updated in .env
+Oct 31 15:31:00 azure1 get_secrets.sh[15649]: info: No menu item 'Simple flask secret recovery.....'>
+Oct 31 15:31:01 azure1 get_secrets.sh[15601]: Good ! Lauching the injection of flask secret inside .>
+Oct 31 15:31:01 azure1 get_secrets.sh[15601]: Good ! Ready to start the web server.....
+Oct 31 15:31:01 azure1 systemd[1]: webapp.service: Found left-over process 15673 (python3) in contro>
+Oct 31 15:31:01 azure1 systemd[1]: webapp.service: This usually indicates unclean termination of a p>
+Oct 31 15:31:01 azure1 systemd[1]: Started webapp.service - Super Webapp MEOW.
+```
+
+-Avant test
+```sh
+# Flask Configuration
+FLASK_SECRET_KEY=kailoo
+FLASK_DEBUG=False
+FLASK_HOST=0.0.0.0
+FLASK_PORT=8000
+
+# Database Configuration
+DB_HOST=10.0.0.8
+DB_PORT=3306
+DB_NAME=meow_database
+DB_USER=meow
+DB_PASSWORD=meow
+
+```
+
+-Après le restart
+```sh
+# Flask Configuration
+FLASK_SECRET_KEY=yzbDbWJRHT7RX9yC9AXmjri9p6DQ7ONiyc+l8r1ytd0=
+FLASK_DEBUG=False
+FLASK_HOST=0.0.0.0
+FLASK_PORT=8000
+
+# Database Configuration
+DB_HOST=10.0.0.8
+DB_PORT=3306
+DB_NAME=meow_database
+DB_USER=meow
+DB_PASSWORD=meow
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
