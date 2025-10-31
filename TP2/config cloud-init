@@ -1,0 +1,51 @@
+```sh
+#cloud-config
+disable_root: false
+system_info:
+  default_user:
+    name: gusta
+package_update: true
+packages:
+  - mysql-server
+
+users:
+  - name: gusta
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBy6spTiu6+2Hm8K94CNNJ7Z7OR3CiGkoTaAt0TBD7E+ gusta@NATHANHO_AMB
+
+  - name: meow
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBy6spTiu6+2Hm8K94CNNJ7Z7OR3CiGkoTaAt0TBD7E+ gusta@NATHANHO_AMB
+
+
+users:
+  - name: gustanth
+    plain_text_passwd: gusta123
+    lock_passwd: false
+    sudo:  ALL=(ALL) NOPASSWD:ALL
+    groups: sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBy6spTiu6+2Hm8K94CNNJ7Z7OR3CiGkoTaAt0TBD7E+ gusta@NATHANHO_AMB
+write_files:
+  - path: /tmp/init.sql
+    permissions: '0644'
+    owner: root:root
+    content: |
+      CREATE DATABASE meow_database;
+      CREATE USER 'meow'@'%' IDENTIFIED BY 'meow';
+      GRANT ALL PRIVILEGES ON meow_database.* TO 'meow'@'%';
+      FLUSH PRIVILEGES;
+runcmd:
+  systemctl enable mysql
+   systemctl start mysql
+   mysql -u root < /tmp/init.sql
+```
+ 
+	
