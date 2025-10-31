@@ -149,6 +149,65 @@ Voir ficher conf cloud-init
 
 🌞 Testez que ça fonctionne
 
+- Deploiement
+```sh
+PS C:\Users\gusta> az vm create --resource-group B2_CScloud --name azure2.tp2 --image Ubuntu2404 --size Standard_B1s --location francecentral --public-ip-sku Standard  --custom-data cloud-init.txt --ssh-key-values "$env:USERPROFILE\.ssh\cloud_tp.pub" --admin-username gustanth --output table
+The default value of '--size' will be changed to 'Standard_D2s_v5' from 'Standard_DS1_v2' in a future release.
+Selecting "northeurope" may reduce your costs. The region you've selected may cost more for the same services. You can disable this message in the future with the command "az config set core.display_region_identified=false". Learn more at https://go.microsoft.com/fwlink/?linkid=222571
+
+ResourceGroup    PowerState    PublicIpAddress    Fqdns    PrivateIpAddress    MacAddress         Location
+---------------  ------------  -----------------  -------  ------------------  -----------------  -------------
+B2_CScloud       VM running    52.143.179.100              10.0.0.11           00-0D-3A-E7-A7-72  francecentral
+```
+
+- Connexion ssh
+  ```sh
+  PS C:\Users\gusta> ssh gustanth@52.143.179.100
+The authenticity of host '52.143.179.100 (52.143.179.100)' can't be established.
+ED25519 key fingerprint is SHA256:8M+PHgzsIMRyMJ2BhL62b9tL72wsx7GbLDDB/K1YFJM.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '52.143.179.100' (ED25519) to the list of known hosts.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.14.0-1012-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Fri Oct 31 01:47:08 UTC 2025
+
+  System load:  0.15              Processes:             115
+  Usage of /:   5.6% of 28.02GB   Users logged in:       0
+  Memory usage: 28%               IPv4 address for eth0: 10.0.0.11
+  Swap usage:   0%
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+gustanth@azure2:~$
+```
+
+- Connexion serveur de db
+```sh
 
 
 
