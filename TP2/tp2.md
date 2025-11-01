@@ -492,9 +492,9 @@ gusta@azure1:~$ sudo systemctl status webapp
      CGroup: /system.slice/webapp.service
              └─9829 /opt/meow/bin/python app.py
 ```
-- Ficher .env
 
-  *Avant
+-- Ficher .env
+  
   ```sh
 # Flask Configuration
 FLASK_SECRET_KEY=ewnFw95H7qBeGiVvkQl9YmnJohW6NCMMqR0arxfnWYASeCDvzwQwzLxMCboAOi3e
@@ -591,6 +591,7 @@ DB_PASSWORD=meow
 ```
 
 -Après le restart
+
 ```sh
 # Flask Configuration
 FLASK_SECRET_KEY=yzbDbWJRHT7RX9yC9AXmjri9p6DQ7ONiyc+l8r1ytd0=
