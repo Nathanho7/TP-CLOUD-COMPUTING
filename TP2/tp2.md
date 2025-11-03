@@ -875,6 +875,65 @@ PS C:\Users\gusta>
 
 
 
+# 2. Haïssez-moi¶
+## B. Utilisateur MySQL¶
+
+🌞 Créer un ptit user SQL pour notre script
+
+```sh
+gustanth@azure2:~$ sudo mysql
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.43-0ubuntu0.24.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE USER 'backup'@'localhost' IDENTIFIED BY 'backup!';
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> GRANT ALL PRIVILEGES ON meow_database.* TO 'backup'@'localhost';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+```
+
+🌞 Tester que vous pouvez vous connecter avec cet utilisateur
+
+```sh
+gustanth@azure2:~$ mysql -u backup -h 127.0.0.1 -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 20
+Server version: 8.0.43-0ubuntu0.24.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+```
+
+C. Script db_backup.sh¶
+🌞 Ecrire le script db_backup.sh
+
+-> Voire depot git 
+
+
+
+
 
 
 
