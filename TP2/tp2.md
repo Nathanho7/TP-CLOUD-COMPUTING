@@ -612,8 +612,266 @@ DB_PASSWORD=meow
 
 ## 1. Un premier ptit blobz
 
+🌞 Upload un fichier dans le Blob Container depuis azure2.tp2
+
+- CO SSH
+
+  ```sh  
+PS C:\Users\gusta> ssh gustanth@4.178.189.251
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.14.0-1012-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Mon Nov  3 17:45:52 UTC 2025
+
+  System load:  0.0                Processes:             115
+  Usage of /:   11.6% of 28.02GB   Users logged in:       0
+  Memory usage: 74%                IPv4 address for eth0: 10.0.0.11
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+17 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+*** Sy
+stem restart required ***
+Last login: Mon Nov  3 18:01:24 2025 from 37.166.163.91
+gustanth@azure2:~$
+```
 
 
+- CLI
+  
+ ```sh
+gustanth@azure2:~$ $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri https://azcliprod.blob.core.windows.net/msi/azure-cli-2.51.0.msi -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi
+=: command not found
+Invoke-WebRequest: command not found
+Start-Process: command not found
+Remove-Item: command not found
+gustanth@azure2:~$ sudo tdnf install ca-certificates
+sudo: tdnf: command not found
+gustanth@azure2:~$ sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+Hit:1 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease
+Get:4 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Hit:5 https://packages.microsoft.com/repos/azure-cli noble InRelease
+Get:6 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1298 kB]
+Get:7 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [213 kB]
+Get:8 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [906 kB]
+Get:9 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [203 kB]
+Get:10 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2131 kB]
+Get:11 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [483 kB]
+Fetched 5361 kB in 2s (2581 kB/s)
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+apt-transport-https is already the newest version (2.8.3).
+ca-certificates is already the newest version (20240203).
+curl is already the newest version (8.5.0-2ubuntu10.6).
+gnupg is already the newest version (2.4.4-2ubuntu17.3).
+lsb-release is already the newest version (12.0-2).
+0 upgraded, 0 newly installed, 0 to remove and 17 not upgraded.
+gustanth@azure2:~$ sudo mkdir -p /etc/apt/keyrings
+curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
+  gpg --dearmor | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
+sudo chmod go+r /etc/apt/keyrings/microsoft.gpg
+gustanth@azure2:~$ AZ_DIST=$(lsb_release -cs)
+echo "Types: deb
+URIs: https://packages.microsoft.com/repos/azure-cli/
+Suites: ${AZ_DIST}
+Components: main
+Architectures: $(dpkg --print-architecture)
+Signed-by: /etc/apt/keyrings/microsoft.gpg" | sudo tee /etc/apt/sources.list.d/azure-cli.sources
+Types: deb
+URIs: https://packages.microsoft.com/repos/azure-cli/
+Suites: noble
+Components: main
+Architectures: amd64
+Signed-by: /etc/apt/keyrings/microsoft.gpg
+gustanth@azure2:~$ sudo apt-get update
+sudo apt-get install azure-cli
+Hit:1 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease
+Hit:4 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease
+Hit:5 https://packages.microsoft.com/repos/azure-cli noble InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+azure-cli is already the newest version (2.78.0-1~noble).
+0 upgraded, 0 newly installed, 0 to remove and 17 not upgraded.
+```
+
+-  AZ LOGIN 
+
+```sh
+[
+  {
+    "environmentName": "AzureCloud",
+    "homeTenantId": "413600cf-bd4e-4c7c-8a61-69e73cddf731",
+    "id": "eee3936d-aca0-4fc8-bdd6-13976fa23a67",
+    "isDefault": true,
+    "managedByTenants": [],
+    "name": "Azure for Students",
+    "state": "Enabled",
+    "tenantId": "413600cf-bd4e-4c7c-8a61-69e73cddf731",
+    "user": {
+      "assignedIdentityInfo": "MSI",
+      "name": "systemAssignedIdentity",
+      "type": "servicePrincipal"
+    }
+  }
+]
+
+gustanth@azure2:~$ echo "meow" > /tmp/meow.txt
+gustanth@azure2:~$ az storage blob upload \
+  --account-name gustabstorage \
+  --container-name bobby \
+  --name meow.txt \
+  --file /tmp/meow.txt \
+  --auth-mode login
+Finished[#############################################################]  100.0000%
+{
+  "client_request_id": "f3911fcb-b8ea-11f0-b9b8-6045bd6ba23b",
+  "content_md5": "rWBtaiSi3smCvCmTqq+RYA==",
+  "date": "2025-11-03T19:26:10+00:00",
+  "encryption_key_sha256": null,
+  "encryption_scope": null,
+  "etag": "\"0x8DE1B0ED896ABF7\"",
+  "lastModified": "2025-11-03T19:26:11+00:00",
+  "request_id": "bdbf9205-001e-0055-5ef7-4cd366000000",
+  "request_server_encrypted": true,
+  "version": "2022-11-02",
+  "version_id": null
+}
+```
+
+🌞 Download un fichier du Blob Container
+
+
+- az login
+```sh
+ PS C:\Users\gusta> az login
+Select the account you want to log in with. For more information on login with Azure CLI, see https://go.microsoft.com/fwlink/?linkid=2271136
+
+Retrieving tenants and subscriptions for the selection...
+
+[Tenant and subscription selection]
+
+No     Subscription name    Subscription ID                       Tenant
+-----  -------------------  ------------------------------------  --------
+[1] *  Azure for Students   eee3936d-aca0-4fc8-bdd6-13976fa23a67  Efrei
+
+The default is marked with an *; the default tenant is 'Efrei' and subscription is 'Azure for Students' (eee3936d-aca0-4fc8-bdd6-13976fa23a67).
+
+Select a subscription and tenant (Type a number or Enter for no changes):
+
+Tenant: Efrei
+Subscription: Azure for Students (eee3936d-aca0-4fc8-bdd6-13976fa23a67)
+
+[Announcements]
+With the new Azure CLI login experience, you can select the subscription you want to use more easily. Learn more about it and its configuration at https://go.microsoft.com/fwlink/?linkid=2271236
+
+If you encounter any problem, please open an issue at https://aka.ms/azclibug
+
+[Warning] The login output has been updated. Please be aware that it no longer displays the full list of available subscriptions by default.
+
+PS C:\Users\gusta>
+```
+
+- Cmd az
+
+```sh
+PS C:\Users\gusta> az storage blob download --account-name gustabstorage  --container-name bobby --name meow.txt --file .\meow.txt --account-key (az storage account keys list --account-name gustabstorage --resource-group B2_CScloud --query "[0].value" -o tsv)
+Finished[#############################################################]  100.0000%
+{
+  "container": "bobby",
+  "content": "",
+  "contentMd5": null,
+  "deleted": false,
+  "encryptedMetadata": null,
+  "encryptionKeySha256": null,
+  "encryptionScope": null,
+  "hasLegalHold": null,
+  "hasVersionsOnly": null,
+  "immutabilityPolicy": {
+    "expiryTime": null,
+    "policyMode": null
+  },
+  "isAppendBlobSealed": null,
+  "isCurrentVersion": null,
+  "lastAccessedOn": null,
+  "metadata": {},
+  "name": "meow.txt",
+  "objectReplicationDestinationPolicy": null,
+  "objectReplicationSourceProperties": [],
+  "properties": {
+    "appendBlobCommittedBlockCount": null,
+    "blobTier": null,
+    "blobTierChangeTime": null,
+    "blobTierInferred": null,
+    "blobType": "BlockBlob",
+    "contentLength": 5,
+    "contentRange": "bytes None-None/5",
+    "contentSettings": {
+      "cacheControl": null,
+      "contentDisposition": null,
+      "contentEncoding": null,
+      "contentLanguage": null,
+      "contentMd5": "rWBtaiSi3smCvCmTqq+RYA==",
+      "contentType": "text/plain"
+    },
+    "copy": {
+      "completionTime": null,
+      "destinationSnapshot": null,
+      "id": null,
+      "incrementalCopy": null,
+      "progress": null,
+      "source": null,
+      "status": null,
+      "statusDescription": null
+    },
+    "creationTime": "2025-11-03T19:26:11+00:00",
+    "deletedTime": null,
+    "etag": "\"0x8DE1B0ED896ABF7\"",
+    "lastModified": "2025-11-03T19:26:11+00:00",
+    "lease": {
+      "duration": null,
+      "state": "available",
+      "status": "unlocked"
+    },
+    "pageBlobSequenceNumber": null,
+    "pageRanges": null,
+    "rehydrationStatus": null,
+    "remainingRetentionDays": null,
+    "serverEncrypted": true
+  },
+  "rehydratePriority": null,
+  "requestServerEncrypted": true,
+  "snapshot": null,
+  "tagCount": null,
+  "tags": null,
+  "versionId": null
+}
+PS C:\Users\gusta> Get-Content .\meow.txt
+meow
+PS C:\Users\gusta>
+```
 
 
 
