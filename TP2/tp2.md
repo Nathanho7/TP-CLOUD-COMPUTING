@@ -615,20 +615,19 @@ DB_PASSWORD=meow
 🌞 Upload un fichier dans le Blob Container depuis azure2.tp2
 
 - CO SSH
-
-  ```sh  
-PS C:\Users\gusta> ssh gustanth@4.178.189.251
-Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.14.0-1012-azure x86_64)
+```sh
+PS C:\Users\gusta> ssh az2
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.14.0-1014-azure x86_64)
 
  * Documentation:  https://help.ubuntu.com
  * Management:     https://landscape.canonical.com
  * Support:        https://ubuntu.com/pro
 
- System information as of Mon Nov  3 17:45:52 UTC 2025
+ System information as of Tue Nov  4 09:24:32 UTC 2025
 
-  System load:  0.0                Processes:             115
-  Usage of /:   11.6% of 28.02GB   Users logged in:       0
-  Memory usage: 74%                IPv4 address for eth0: 10.0.0.11
+  System load:  0.02              Processes:             115
+  Usage of /:   9.1% of 28.02GB   Users logged in:       0
+  Memory usage: 71%               IPv4 address for eth0: 10.0.0.8
   Swap usage:   0%
 
  * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
@@ -639,43 +638,27 @@ Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.14.0-1012-azure x86_64)
 Expanded Security Maintenance for Applications is not enabled.
 
 17 updates can be applied immediately.
+2 of these updates are standard security updates.
 To see these additional updates run: apt list --upgradable
 
 Enable ESM Apps to receive additional future security updates.
 See https://ubuntu.com/esm or run: sudo pro status
 
-*** Sy
-stem restart required ***
-Last login: Mon Nov  3 18:01:24 2025 from 37.166.163.91
-gustanth@azure2:~$
+
+Last login: Tue Nov  4 08:45:24 2025 from 10.0.0.5
+gusta@azure2:~$
 ```
 
-
 - CLI
-  
- ```sh
-gustanth@azure2:~$ $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri https://azcliprod.blob.core.windows.net/msi/azure-cli-2.51.0.msi -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi
-=: command not found
-Invoke-WebRequest: command not found
-Start-Process: command not found
-Remove-Item: command not found
-gustanth@azure2:~$ sudo tdnf install ca-certificates
-sudo: tdnf: command not found
-gustanth@azure2:~$ sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+```sh
+gusta@azure2:~$ sudo apt-get update
 Hit:1 http://azure.archive.ubuntu.com/ubuntu noble InRelease
 Hit:2 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease
 Hit:3 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease
-Get:4 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Hit:4 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease
 Hit:5 https://packages.microsoft.com/repos/azure-cli noble InRelease
-Get:6 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1298 kB]
-Get:7 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [213 kB]
-Get:8 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [906 kB]
-Get:9 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [203 kB]
-Get:10 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2131 kB]
-Get:11 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [483 kB]
-Fetched 5361 kB in 2s (2581 kB/s)
 Reading package lists... Done
+gusta@azure2:~$ sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
 Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
@@ -685,11 +668,11 @@ curl is already the newest version (8.5.0-2ubuntu10.6).
 gnupg is already the newest version (2.4.4-2ubuntu17.3).
 lsb-release is already the newest version (12.0-2).
 0 upgraded, 0 newly installed, 0 to remove and 17 not upgraded.
-gustanth@azure2:~$ sudo mkdir -p /etc/apt/keyrings
+gusta@azure2:~$ sudo mkdir -p /etc/apt/keyrings
 curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
   gpg --dearmor | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
 sudo chmod go+r /etc/apt/keyrings/microsoft.gpg
-gustanth@azure2:~$ AZ_DIST=$(lsb_release -cs)
+gusta@azure2:~$ AZ_DIST=$(lsb_release -cs)
 echo "Types: deb
 URIs: https://packages.microsoft.com/repos/azure-cli/
 Suites: ${AZ_DIST}
@@ -702,7 +685,7 @@ Suites: noble
 Components: main
 Architectures: amd64
 Signed-by: /etc/apt/keyrings/microsoft.gpg
-gustanth@azure2:~$ sudo apt-get update
+gusta@azure2:~$ sudo apt-get update
 sudo apt-get install azure-cli
 Hit:1 http://azure.archive.ubuntu.com/ubuntu noble InRelease
 Hit:2 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease
@@ -716,10 +699,9 @@ Reading state information... Done
 azure-cli is already the newest version (2.78.0-1~noble).
 0 upgraded, 0 newly installed, 0 to remove and 17 not upgraded.
 ```
-
--  AZ LOGIN 
-
-```sh
+ -AZ LOGIN
+ ```sh 
+gusta@azure2:~$ az login --identity
 [
   {
     "environmentName": "AzureCloud",
@@ -738,23 +720,17 @@ azure-cli is already the newest version (2.78.0-1~noble).
   }
 ]
 
-gustanth@azure2:~$ echo "meow" > /tmp/meow.txt
-gustanth@azure2:~$ az storage blob upload \
-  --account-name gustabstorage \
-  --container-name bobby \
-  --name meow.txt \
-  --file /tmp/meow.txt \
-  --auth-mode login
+gusta@azure2:~$ az storage blob upload --account-name kailoostorage  --container-name bobbytp2  --name meow.txt --file /tmp/meow.txt   --auth-mode login
 Finished[#############################################################]  100.0000%
 {
-  "client_request_id": "f3911fcb-b8ea-11f0-b9b8-6045bd6ba23b",
+  "client_request_id": "8f479581-b962-11f0-b77c-7ced8d6cfe1e",
   "content_md5": "rWBtaiSi3smCvCmTqq+RYA==",
-  "date": "2025-11-03T19:26:10+00:00",
+  "date": "2025-11-04T09:42:22+00:00",
   "encryption_key_sha256": null,
   "encryption_scope": null,
-  "etag": "\"0x8DE1B0ED896ABF7\"",
-  "lastModified": "2025-11-03T19:26:11+00:00",
-  "request_id": "bdbf9205-001e-0055-5ef7-4cd366000000",
+  "etag": "\"0x8DE1B8674F5658B\"",
+  "lastModified": "2025-11-04T09:42:23+00:00",
+  "request_id": "2b40437d-701e-0025-526f-4d6413000000",
   "request_server_encrypted": true,
   "version": "2022-11-02",
   "version_id": null
@@ -763,44 +739,16 @@ Finished[#############################################################]  100.000
 
 🌞 Download un fichier du Blob Container
 
-
-- az login
 ```sh
- PS C:\Users\gusta> az login
-Select the account you want to log in with. For more information on login with Azure CLI, see https://go.microsoft.com/fwlink/?linkid=2271136
-
-Retrieving tenants and subscriptions for the selection...
-
-[Tenant and subscription selection]
-
-No     Subscription name    Subscription ID                       Tenant
------  -------------------  ------------------------------------  --------
-[1] *  Azure for Students   eee3936d-aca0-4fc8-bdd6-13976fa23a67  Efrei
-
-The default is marked with an *; the default tenant is 'Efrei' and subscription is 'Azure for Students' (eee3936d-aca0-4fc8-bdd6-13976fa23a67).
-
-Select a subscription and tenant (Type a number or Enter for no changes):
-
-Tenant: Efrei
-Subscription: Azure for Students (eee3936d-aca0-4fc8-bdd6-13976fa23a67)
-
-[Announcements]
-With the new Azure CLI login experience, you can select the subscription you want to use more easily. Learn more about it and its configuration at https://go.microsoft.com/fwlink/?linkid=2271236
-
-If you encounter any problem, please open an issue at https://aka.ms/azclibug
-
-[Warning] The login output has been updated. Please be aware that it no longer displays the full list of available subscriptions by default.
-
-PS C:\Users\gusta>
-```
-
-- Cmd az
-
-```sh
-PS C:\Users\gusta> az storage blob download --account-name gustabstorage  --container-name bobby --name meow.txt --file .\meow.txt --account-key (az storage account keys list --account-name gustabstorage --resource-group B2_CScloud --query "[0].value" -o tsv)
+PS C:\Users\gusta> az storage blob download `
+>>   --account-name kailoostorage `
+>>   --container-name bobbytp2 `
+>>   --name meow.txt `
+>>   --file "C:\Users\gusta\Downloads\meow.txt" `
+>>   --auth-mode login
 Finished[#############################################################]  100.0000%
 {
-  "container": "bobby",
+  "container": "bobbytp2",
   "content": "",
   "contentMd5": null,
   "deleted": false,
@@ -846,10 +794,10 @@ Finished[#############################################################]  100.000
       "status": null,
       "statusDescription": null
     },
-    "creationTime": "2025-11-03T19:26:11+00:00",
+    "creationTime": "2025-11-04T09:42:23+00:00",
     "deletedTime": null,
-    "etag": "\"0x8DE1B0ED896ABF7\"",
-    "lastModified": "2025-11-03T19:26:11+00:00",
+    "etag": "\"0x8DE1B8674F5658B\"",
+    "lastModified": "2025-11-04T09:42:23+00:00",
     "lease": {
       "duration": null,
       "state": "available",
@@ -868,51 +816,25 @@ Finished[#############################################################]  100.000
   "tags": null,
   "versionId": null
 }
-PS C:\Users\gusta> Get-Content .\meow.txt
+PS C:\Users\gusta> cat meow.txt
 meow
-PS C:\Users\gusta>
 ```
 
-
-
 # 2. Haïssez-moi¶
+
 ## B. Utilisateur MySQL¶
 
 🌞 Créer un ptit user SQL pour notre script
 
 ```sh
-gustanth@azure2:~$ sudo mysql
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 9
-Server version: 8.0.43-0ubuntu0.24.04.2 (Ubuntu)
-
-Copyright (c) 2000, 2025, Oracle and/or its affiliates.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql> CREATE USER 'backup'@'localhost' IDENTIFIED BY 'backup!';
-Query OK, 0 rows affected (0.07 sec)
-
-mysql> GRANT ALL PRIVILEGES ON meow_database.* TO 'backup'@'localhost';
-Query OK, 0 rows affected (0.02 sec)
-
-mysql> FLUSH PRIVILEGES;
-Query OK, 0 rows affected (0.01 sec)
-
-mysql>
-```
-
-🌞 Tester que vous pouvez vous connecter avec cet utilisateur
-
-```sh
-gustanth@azure2:~$ mysql -u backup -h 127.0.0.1 -p
+gusta@azure2:~$ hostname -I
+10.0.0.8
+gusta@azure2:~$ hostname -f
+azure2.vuyd34vp2hxurkcjkueltlyuyg.parx.internal.cloudapp.net
+gusta@azure2:~$ mysql -u backup -h 10.0.0.8 -p
 Enter password:
 Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 20
+Your MySQL connection id is 10
 Server version: 8.0.43-0ubuntu0.24.04.2 (Ubuntu)
 
 Copyright (c) 2000, 2025, Oracle and/or its affiliates.
@@ -925,158 +847,6 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 mysql>
 ```
-
-C. Script db_backup.sh¶
-🌞 Ecrire le script db_backup.sh
-
--> Voire depot git 
-
-
-🌞 Environnement du script db_backup.sh
-```sh
-gustanth@azure2:~$ sudo mv db_backup.sh /usr/local/bin
-gustanth@azure2:~$ sudo useradd backup
-useradd: user 'backup' already exists
-gustanth@azure2:~$ sudo chown backup:backup /usr/local/bin/db_backup.sh
-gustanth@azure2:~$ sudo chmod 700 /usr/local/bin/db_backup.sh
-gustanth@azure2:~$ sudo chmod +x /usr/local/bin/db_backup.sh
-gustanth@azure2:~$ ls -l /usr/local/bin/db_backup.sh
--rwx------ 1 backup backup 1432 Nov  3 21:54 /usr/local/bin/db_backup.sh
-```
-
-🌞 Récupérer le blob
-```sh
-PS C:\Users\gusta> az storage blob download `
->>   --account-name gustabstorage `
->>   --container-name bobby `
->>   --name meow.txt `
->>   --file .\meow.txt `
->>   --account-key $AZURE_STORAGE_KEY
-Finished[#############################################################]  100.0000%
-{
-  "container": "bobby",
-  "content": "",
-  "contentMd5": null,
-  "deleted": false,
-  "encryptedMetadata": null,
-  "encryptionKeySha256": null,
-  "encryptionScope": null,
-  "hasLegalHold": null,
-  "hasVersionsOnly": null,
-  "immutabilityPolicy": {
-    "expiryTime": null,
-    "policyMode": null
-  },
-  "isAppendBlobSealed": null,
-  "isCurrentVersion": null,
-  "lastAccessedOn": null,
-  "metadata": {},
-  "name": "meow.txt",
-  "objectReplicationDestinationPolicy": null,
-  "objectReplicationSourceProperties": [],
-  "properties": {
-    "appendBlobCommittedBlockCount": null,
-    "blobTier": null,
-    "blobTierChangeTime": null,
-    "blobTierInferred": null,
-    "blobType": "BlockBlob",
-    "contentLength": 5,
-    "contentRange": "bytes None-None/5",
-    "contentSettings": {
-      "cacheControl": null,
-      "contentDisposition": null,
-      "contentEncoding": null,
-      "contentLanguage": null,
-      "contentMd5": "rWBtaiSi3smCvCmTqq+RYA==",
-      "contentType": "text/plain"
-    },
-    "copy": {
-      "completionTime": null,
-      "destinationSnapshot": null,
-      "id": null,
-      "incrementalCopy": null,
-      "progress": null,
-      "source": null,
-      "status": null,
-      "statusDescription": null
-    },
-    "creationTime": "2025-11-03T19:26:11+00:00",
-    "deletedTime": null,
-    "etag": "\"0x8DE1B0ED896ABF7\"",
-    "lastModified": "2025-11-03T19:26:11+00:00",
-    "lease": {
-      "duration": null,
-      "state": "available",
-      "status": "unlocked"
-    },
-    "pageBlobSequenceNumber": null,
-    "pageRanges": null,
-    "rehydrationStatus": null,
-    "remainingRetentionDays": null,
-    "serverEncrypted": true
-  },
-  "rehydratePriority": null,
-  "requestServerEncrypted": true,
-  "snapshot": null,
-  "tagCount": null,
-  "tags": null,
-  "versionId": null
-}
-```
-
-D. Service¶
-🌞 Ecrire un fichier /etc/systemd/system/db_backup.service
-```sh
-→ Dans le dépôt git
-```
-
-🌞 Tester
-```sh
-gustanth@azure2:~$ sudo systemctl daemon-reload
-gustanth@azure2:~$ sudo systemctl start db_backup.service
-gustanth@azure2:~$ sudo systemctl status db_backup.service
-○ db_backup.service - Backup MySQL Database Azure Blob
-     Loaded: loaded (/etc/systemd/system/db_backup.service; disabled; preset: enabled)
-     Active: inactive (dead)
-
-Nov 03 22:37:53 azure2 db_backup.sh[38689]:   File "/opt/az/lib/python3.13/site-packages/k>
-Nov 03 22:37:53 azure2 db_backup.sh[38689]:     os.makedirs(d)
-Nov 03 22:37:53 azure2 db_backup.sh[38689]:     ~~~~~~~~~~~^^^
-Nov 03 22:37:53 azure2 db_backup.sh[38689]:   File "<frozen os>", line 228, in makedirs
-Nov 03 22:37:53 azure2 db_backup.sh[38689]: PermissionError: [Errno 13] Permission denied:>
-Nov 03 22:37:53 azure2 db_backup.sh[38673]: [Mon Nov  3 22:37:53 UTC 2025] Envoi vers Azur>
-Nov 03 22:37:53 azure2 db_backup.sh[38673]: [Mon Nov  3 22:37:53 UTC 2025] Archive .tar.gz>
-Nov 03 22:37:53 azure2 db_backup.sh[38673]: [Mon Nov  3 22:37:53 UTC 2025] Backup complete>
-Nov 03 22:37:53 azure2 systemd[1]: db_backup.service: Deactivated successfully.
-Nov 03 22:37:53 azure2 systemd[1]: Finished db_backup.service - Backup MySQL Database Azur>
-lines 1-14/14 (END)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
 
 
 
