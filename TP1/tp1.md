@@ -1,5 +1,9 @@
 
+# TP1 : Azure first steps
+## I. Prérequis
 
+
+### A. Choix de l'algorithme de chiffrement
 
  🌞 Configuration SSH client pour les deux machines
 
