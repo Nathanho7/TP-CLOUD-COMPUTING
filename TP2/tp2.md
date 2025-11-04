@@ -932,6 +932,127 @@ C. Script db_backup.sh¶
 -> Voire depot git 
 
 
+🌞 Environnement du script db_backup.sh
+```sh
+gustanth@azure2:~$ sudo mv db_backup.sh /usr/local/bin
+gustanth@azure2:~$ sudo useradd backup
+useradd: user 'backup' already exists
+gustanth@azure2:~$ sudo chown backup:backup /usr/local/bin/db_backup.sh
+gustanth@azure2:~$ sudo chmod 700 /usr/local/bin/db_backup.sh
+gustanth@azure2:~$ sudo chmod +x /usr/local/bin/db_backup.sh
+gustanth@azure2:~$ ls -l /usr/local/bin/db_backup.sh
+-rwx------ 1 backup backup 1432 Nov  3 21:54 /usr/local/bin/db_backup.sh
+```
+
+🌞 Récupérer le blob
+```sh
+PS C:\Users\gusta> az storage blob download `
+>>   --account-name gustabstorage `
+>>   --container-name bobby `
+>>   --name meow.txt `
+>>   --file .\meow.txt `
+>>   --account-key $AZURE_STORAGE_KEY
+Finished[#############################################################]  100.0000%
+{
+  "container": "bobby",
+  "content": "",
+  "contentMd5": null,
+  "deleted": false,
+  "encryptedMetadata": null,
+  "encryptionKeySha256": null,
+  "encryptionScope": null,
+  "hasLegalHold": null,
+  "hasVersionsOnly": null,
+  "immutabilityPolicy": {
+    "expiryTime": null,
+    "policyMode": null
+  },
+  "isAppendBlobSealed": null,
+  "isCurrentVersion": null,
+  "lastAccessedOn": null,
+  "metadata": {},
+  "name": "meow.txt",
+  "objectReplicationDestinationPolicy": null,
+  "objectReplicationSourceProperties": [],
+  "properties": {
+    "appendBlobCommittedBlockCount": null,
+    "blobTier": null,
+    "blobTierChangeTime": null,
+    "blobTierInferred": null,
+    "blobType": "BlockBlob",
+    "contentLength": 5,
+    "contentRange": "bytes None-None/5",
+    "contentSettings": {
+      "cacheControl": null,
+      "contentDisposition": null,
+      "contentEncoding": null,
+      "contentLanguage": null,
+      "contentMd5": "rWBtaiSi3smCvCmTqq+RYA==",
+      "contentType": "text/plain"
+    },
+    "copy": {
+      "completionTime": null,
+      "destinationSnapshot": null,
+      "id": null,
+      "incrementalCopy": null,
+      "progress": null,
+      "source": null,
+      "status": null,
+      "statusDescription": null
+    },
+    "creationTime": "2025-11-03T19:26:11+00:00",
+    "deletedTime": null,
+    "etag": "\"0x8DE1B0ED896ABF7\"",
+    "lastModified": "2025-11-03T19:26:11+00:00",
+    "lease": {
+      "duration": null,
+      "state": "available",
+      "status": "unlocked"
+    },
+    "pageBlobSequenceNumber": null,
+    "pageRanges": null,
+    "rehydrationStatus": null,
+    "remainingRetentionDays": null,
+    "serverEncrypted": true
+  },
+  "rehydratePriority": null,
+  "requestServerEncrypted": true,
+  "snapshot": null,
+  "tagCount": null,
+  "tags": null,
+  "versionId": null
+}
+```
+
+D. Service¶
+🌞 Ecrire un fichier /etc/systemd/system/db_backup.service
+```sh
+→ Dans le dépôt git
+```
+
+🌞 Tester
+```sh
+gustanth@azure2:~$ sudo systemctl daemon-reload
+gustanth@azure2:~$ sudo systemctl start db_backup.service
+gustanth@azure2:~$ sudo systemctl status db_backup.service
+○ db_backup.service - Backup MySQL Database Azure Blob
+     Loaded: loaded (/etc/systemd/system/db_backup.service; disabled; preset: enabled)
+     Active: inactive (dead)
+
+Nov 03 22:37:53 azure2 db_backup.sh[38689]:   File "/opt/az/lib/python3.13/site-packages/k>
+Nov 03 22:37:53 azure2 db_backup.sh[38689]:     os.makedirs(d)
+Nov 03 22:37:53 azure2 db_backup.sh[38689]:     ~~~~~~~~~~~^^^
+Nov 03 22:37:53 azure2 db_backup.sh[38689]:   File "<frozen os>", line 228, in makedirs
+Nov 03 22:37:53 azure2 db_backup.sh[38689]: PermissionError: [Errno 13] Permission denied:>
+Nov 03 22:37:53 azure2 db_backup.sh[38673]: [Mon Nov  3 22:37:53 UTC 2025] Envoi vers Azur>
+Nov 03 22:37:53 azure2 db_backup.sh[38673]: [Mon Nov  3 22:37:53 UTC 2025] Archive .tar.gz>
+Nov 03 22:37:53 azure2 db_backup.sh[38673]: [Mon Nov  3 22:37:53 UTC 2025] Backup complete>
+Nov 03 22:37:53 azure2 systemd[1]: db_backup.service: Deactivated successfully.
+Nov 03 22:37:53 azure2 systemd[1]: Finished db_backup.service - Backup MySQL Database Azur>
+lines 1-14/14 (END)
+```
+
+
 
 
 
