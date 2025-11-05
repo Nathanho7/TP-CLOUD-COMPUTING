@@ -627,6 +627,41 @@ gusta@azure1:/opt/meow$ sudo systemctl daemon-reload
 🌞 Ouverture du port80 dans le(s) firewall(s)
 
 ```sh
+gusta@azure1:~$ sudo systemctl start webapp.service
+gusta@azure1:~$ sudo systemctl status webapp.service
+● webapp.service - Super Webapp MEOW
+     Loaded: loaded (/etc/systemd/system/webapp.service; disabled; preset: enabled)
+     Active: active (running) since Wed 2025-11-05 06:33:40 UTC; 2s ago
+   Main PID: 8853 (python)
+      Tasks: 1 (limit: 978)
+     Memory: 62.8M (peak: 63.0M)
+        CPU: 679ms
+     CGroup: /system.slice/webapp.service
+             └─8853 /opt/meow/bin/python app.py
+
+Nov 05 06:33:40 azure1 systemd[1]: Started webapp.service - Super Webapp MEOW.
+Nov 05 06:33:42 azure1 python[8853]:  * Serving Flask app 'app'
+Nov 05 06:33:42 azure1 python[8853]:  * Debug mode: off
+Nov 05 06:33:42 azure1 python[8853]: WARNING: This is a development server. Do not use it in a produc>
+Nov 05 06:33:42 azure1 python[8853]:  * Running on all addresses (0.0.0.0)
+Nov 05 06:33:42 azure1 python[8853]:  * Running on http://127.0.0.1:8000
+Nov 05 06:33:42 azure1 python[8853]:  * Running on http://172.17.0.5:8000
+Nov 05 06:33:42 azure1 python[8853]: Press CTRL+C to quit
+lines 1-18/18 (END)
+```
+```sh
+gusta@azure1:~$ sudo ufw status
+Status: inactive
+```
+ ufw au repos , j'ai ouvert le port 8000 sur la WebUi , maintenant il temps d'enfin tester l'app de fou et de poster les msg. 
+
+ # 3. Visitez l'application¶
+ 
+🌞 L'application devrait être fonctionnelle sans soucis à partir de là
+```
+
+
+
 
 
 
