@@ -337,12 +337,107 @@ Selecting "northeurope" may reduce your costs. The region you've selected may 
 | performance_schema |
 | sys                |
 +--------------------+  
-  ```
+    ```
 
+ 
   # III. Gestion de secrets
 
   🌞 Récupérer votre secret depuis la VM
   ```sh
+PS C:\Users\gusta> ssh az1
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.14.0-1012-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Wed Nov  5 21:59:50 UTC 2025
+
+  System load:  0.0                Processes:             116
+  Usage of /:   10.0% of 28.02GB   Users logged in:       0
+  Memory usage: 43%                IPv4 address for eth0: 172.17.0.5
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+15 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+Last login: Wed Nov  5 18:18:18 2025 from 78.243.5.44
+gusta@azure1:~$ az login --identity --allow-no-subscriptions
+[
+  {
+    "environmentName": "AzureCloud",
+    "id": "413600cf-bd4e-4c7c-8a61-69e73cddf731",
+    "isDefault": true,
+    "name": "N/A(tenant level account)",
+    "state": "Enabled",
+    "tenantId": "413600cf-bd4e-4c7c-8a61-69e73cddf731",
+    "user": {
+      "assignedIdentityInfo": "MSI",
+      "name": "systemAssignedIdentity",
+      "type": "servicePrincipal"
+    }
+  }
+]
+
+gusta@azure1:~$ az login --identity --allow-no-subscriptions
+[
+  {
+    "environmentName": "AzureCloud",
+    "id": "413600cf-bd4e-4c7c-8a61-69e73cddf731",
+    "isDefault": true,
+    "name": "N/A(tenant level account)",
+    "state": "Enabled",
+    "tenantId": "413600cf-bd4e-4c7c-8a61-69e73cddf731",
+    "user": {
+      "assignedIdentityInfo": "MSI",
+      "name": "systemAssignedIdentity",
+      "type": "servicePrincipal"
+    }
+  }
+]
+
+gusta@azure1:~$ az keyvault secret show --vault-name conorVault --name vaultsecret
+{
+  "attributes": {
+    "created": "2025-11-05T22:13:34+00:00",
+    "enabled": true,
+    "expires": null,
+    "notBefore": null,
+    "recoverableDays": 90,
+    "recoveryLevel": "Recoverable+Purgeable",
+    "updated": "2025-11-05T22:13:34+00:00"
+  },
+  "contentType": null,
+  "id": "https://conorvault.vault.azure.net/secrets/vaultsecret/66b24dd6c8844f9490becfb896c3545f",
+  "kid": null,
+  "managed": null,
+  "name": "vaultsecret",
+  "tags": {},
+  "value": "lamineyamalunonueve"
+}
+gusta@azure1:~$
+```
+
+# 2. Gérer les secrets de l'application¶
+
+## A. Script pour récupérer les secrets
+
+🌞 Coder un script bash : get_secrets.sh
+
+```sh
+
   
 
 
