@@ -1,3 +1,78 @@
+# I. Prérequis
+
+## 2. Une paire de clés SSH
+
+A. Choix de l'algorithme de chiffrement¶
+🌞 Déterminer quel algorithme de chiffrement utiliser pour vos clés
+    ```sh
+
+
+B. Génération de votre paire de clés¶
+
+🌞 Générer une paire de clés pour ce TP
+```sh
+
+PS C:\Users\gusta>  ssh-keygen -t ed25519 -f .ssh/cloud_tp
+Generating public/private ed25519 key pair.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in .ssh/cloud_tp
+Your public key has been saved in .ssh/cloud_tp.pub
+The key fingerprint is:
+SHA256:hW3Q15H2oUEOSSqDYePmRoSX5LM4ahbmGf/9RMnvENk gusta@NATHANHO_AMB
+The key's randomart image is:
++--[ED25519 256]--+
+|    o*. ...ooo.o |
+|   .=o+  +o.+.+. |
+|    .B o..+. oo..|
+|    = o +o+  .  .|
+| + o +  S* E     |
+|o * o   . o      |
+| * .     o .     |
+|o   . . . o      |
+|     . ... .     |
++----[SHA256]-----+
+`
+PS C:\Users\gusta> ls .ssh
+
+
+    Répertoire : C:\Users\gusta\.ssh
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        05/11/2025     05:09            464 cloud_tp
+-a----        05/11/2025     05:09            101 cloud_tp.pub
+-a----        05/11/2025     04:15             87 config
+-a----        05/11/2025     05:08          17761 known_hosts
+-a----        05/11/2025     05:08          18595 known_hosts.old
+```
+
+# C. Agent SSH
+
+🌞 Configurer un agent SSH sur votre poste
+```sh
+PS C:\Users\gusta> Start-Service ssh-agent
+PS C:\Users\gusta> Get-Service ssh-agent
+
+Status   Name               DisplayName
+------   ----               -----------
+Running  ssh-agent          OpenSSH Authentication Agent
+
+PS C:\Users\gusta> ssh-add .ssh/cloud_tp
+Enter passphrase for .ssh/cloud_tp:
+Identity added: .ssh/cloud_tp (gusta@NATHANHO_AMB)
+PS C:\Users\gusta> notepad .ssh\config
+```
+
+Dans .ssh/config :
+
+Host AzureWMtest
+Hostname <ip_public>
+User gusta
+Port 22
+```
+
 # II. Spawn des VMs
 
 🌞 Connection ssh
@@ -658,7 +733,32 @@ Status: inactive
  # 3. Visitez l'application¶
  
 🌞 L'application devrait être fonctionnelle sans soucis à partir de là
-```
+```sh
+gusta@azure1:~$ curl http://4.233.57.23:8000 | head -n 20
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purr Messages - Cat Message Board</title>
+    <style>
+        /* Modern CSS with cat-themed design */
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffd166;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --cat-paw: #ff9a8b;
+        }
+
+        * {
+            margin: 0;
+ 91 12566   91 11424    0     0  1428k      0 --:--:-- --:--:-- --:--:-- 1593k
+``` 
 
 
 
