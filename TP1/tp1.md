@@ -2,7 +2,8 @@
 
 ## 2. Une paire de clés SSH
 
-A. Choix de l'algorithme de chiffrement¶
+### A. Choix de l'algorithme de chiffrement¶
+
 🌞 Déterminer quel algorithme de chiffrement utiliser pour vos clés
 ```sh
 
