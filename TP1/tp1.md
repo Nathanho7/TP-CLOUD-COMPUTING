@@ -576,7 +576,57 @@ DB_USER=meow
 DB_PASSWORD=meow
 ```
 
+# D. Gestion de users et de droits
 
+🌞 Gestion de users et de droits
+
+```sh
+gusta@azure1:/opt/meow$ sudo useradd webapp
+gusta@azure1:/opt/meow$ sudo chown -R webapp:webapp /opt/meow
+gusta@azure1:/opt/meow$ ls -ld
+drwxr-xr-x 6 webapp webapp 4096 Nov  5 06:01 .
+gusta@azure1:/opt/meow$ ls -l
+total 32
+-rw-rw-r-- 1 webapp webapp 3827 Nov  5 05:32 app.py
+drwxr-xr-x 2 webapp webapp 4096 Nov  5 05:56 bin
+-rw-rw-r-- 1 webapp webapp  223 Nov  5 05:32 docker-compose.yml
+drwxr-xr-x 4 webapp webapp 4096 Nov  5 05:56 include
+drwxr-xr-x 3 webapp webapp 4096 Nov  5 05:56 lib
+lrwxrwxrwx 1 webapp webapp    3 Nov  5 05:50 lib64 -> lib
+-rw-r--r-- 1 webapp webapp  148 Nov  5 05:56 pyvenv.cfg
+-rw-rw-r-- 1 webapp webapp   58 Nov  5 05:32 requirements.txt
+drwxrwxr-x 2 webapp webapp 4096 Nov  5 05:32 templates
+gusta@azure1:/opt/meow$ sudo chmod -R 770 /opt/meow
+sudo chmod -R o-rwx /opt/meow
+gusta@azure1:/opt/meow$
+```
+
+
+# E. Création d'un service webapp.service pour lancer l'application¶
+
+🌞 Création d'un service webapp.service pour lancer l'application
+
+```sh
+gusta@azure1:/opt/meow$ sudo nano /etc/systemd/system/webapp.service
+gusta@azure1:/opt/meow$ cat /etc/systemd/system/webapp.service
+[Unit]
+Description=Super Webapp MEOW
+
+[Service]
+User=webapp
+WorkingDirectory=/opt/meow
+ExecStart=/opt/meow/bin/python app.py
+
+[Install]
+WantedBy=multi-user.target
+gusta@azure1:/opt/meow$ sudo systemctl daemon-reload
+```
+
+# F. Ouverture du port dans le(s) firewall(s)¶
+
+🌞 Ouverture du port80 dans le(s) firewall(s)
+
+```sh
 
 
 
