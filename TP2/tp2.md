@@ -437,7 +437,44 @@ gusta@azure1:~$
 🌞 Coder un script bash : get_secrets.sh
 
 ```sh
+--> dispo dans le depot git
+```
 
+🌞 Environnement du script get_secrets.sh
+
+```sh
+gusta@azure1:~$ sudo mv get_secrets.sh /usr/local/bin
+gusta@azure1:~$ sudo chown webapp:webapp /usr/local/bin/get_secrets.sh
+gusta@azure1:~$ sudo chmod +x /usr/local/bin/get_secrets.sh
+gusta@azure1:~$ sudo chmod -R o= /usr/local/bin/get_secrets.sh
+gusta@azure1:~$ ls -l /usr/local/bin | grep get_secrets
+-rwxr-x--- 1 webapp webapp 623 Nov  5 23:33 get_secrets.sh
+```
+
+* TEST
+
+-Avant execution du script
+
+```sh
+# Flask Configuration
+FLASK_SECRET_KEY=ewnFw95H7qBeGiVvkQl9YmnJohW6NCMMqR0arxfnWYASeCDvzwQwzLxMCboAOi3e
+FLASK_DEBUG=False
+FLASK_HOST=0.0.0.0
+FLASK_PORT=8000
+
+# Database Configuration
+DB_HOST=172.17.0.6
+DB_PORT=3306
+DB_NAME=meow_database
+DB_USER=meow
+DB_PASSWORD=t'as ce juice
+
+```
+- Après execution du script
+  ```sh
+  
+  
+  
   
 
 
