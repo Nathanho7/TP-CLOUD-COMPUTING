@@ -4,11 +4,27 @@
 
 A. Choix de l'algorithme de chiffrement¶
 🌞 Déterminer quel algorithme de chiffrement utiliser pour vos clés
-    ```sh
+```sh
+
+Algorithme de chiffrment choisit : ed25519
+
+   
+ *  Pourquoi ne plus utliser RSA 
+Dans ce document , ils sont vraiment en fureur sur l'utilisation de  RSA
+    [https://blog.trailofbits.com/2019/07/08/fuck-rsa]
+  -  Vulnérabilité SSH
+  [ https://www.schneier.com/blog/archives/2023/11/new-ssh-vulnerability.html]
+
+Autre algorithme de chiffrement  ( dans mon cas ed25519)
+[https://www.brandonchecketts.com/archives/ssh-ed25519-key-best-practices-for-2025
+https://docs.cis.strath.ac.uk/ssh-]
+
+[keys/#:~:text=We%20strongly%20recommend%20using%20only,should%20consider%20upgrading%20where%20possible.]
+```
     
 
 
-B. Génération de votre paire de clés¶
+# B. Génération de votre paire de clés¶
 
 🌞 Générer une paire de clés pour ce TP
 ```sh
