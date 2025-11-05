@@ -1,0 +1,12 @@
+ Host az1
+    Hostname 4.233.57.23
+    User gusta
+    Port 22
+    ForwardAgent yes
+   
+
+ Host az2
+    Hostname 172.17.0.6
+    User gusta
+    Port 22
+  ProxyJump az1
