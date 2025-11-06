@@ -1,0 +1,13 @@
+[Unit]
+Description=Backup DATABASE TO AZURE BLOB
+After=mysql.service
+
+[Service]
+Type=oneshot
+User=backup
+Environment="AZURE_CONFIG_DIR=/tmp/.az-backup-cache"
+ExecStart=/usr/local/bin/db_backup.sh
+
+[Install]
+WantedBy=multi-user.target
+
