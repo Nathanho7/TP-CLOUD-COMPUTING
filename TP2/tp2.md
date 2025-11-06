@@ -746,12 +746,115 @@ gusta@azure2:~$ sudo chown backup:backup /usr/local/bin/db_backup.sh
 gusta@azure2:~$ sudo chmod 500 /usr/local/bin/db_backup.sh
 gusta@azure2:~$ ls -l /usr/local/bin/db_backup.sh
 -r-x------ 1 backup backup 1346 Nov  6 17:59 /usr/local/bin/db_backup.sh
-gusta@azure2:~$ sudo chmod +x /usr/local/bin/db_backup.sh
 ```
 
 🌞 Récupérer le blob
 
+-AVant p'tite demo apres l'execu du script 
 ```sh
+gusta@azure2:~$ sudo -u backup /usr/local/bin/db_backup.sh
+Démarrage du script de backup
+ Création de la sauvegarde SQL : /tmp/dump_2025-11-06_19-53-24.sql...
+ Sauvegarde SQL créé.
+ Compression : /tmp/meow_database_2025-11-06_19-53-24.tar.gz...
+tar: Removing leading `/' from member names
+ Archive créée.
+ Upload de l'archive vers le Blob Storage...
+Finished[#############################################################]  100.0000%
+ Upload terminé.
+Cleanup du ficher d'archive
+Fichier local /tmp/meow_database_2025-11-06_19-53-24.tar.gz supprimé.
+--- [db_backup.sh] Sauvegarde terminée avec succès ---
+```
+
+```sh
+gusta@NATHANHOAMB:~$ az storage blob download \
+  --account-name "michkastorage" \
+  --container-name "blobmeowtp2" \
+  --name "meow_database_2025-11-06_19-53-24.tar.gz" \
+  --file "meow_database_2025-11-06_19-53-24.tar.gz" \
+  --auth-mode login
+Finished[#############################################################]  100.0000%
+{
+  "container": "blobmeowtp2",
+  "content": "",
+  "contentMd5": null,
+  "deleted": false,
+  "encryptedMetadata": null,
+  "encryptionKeySha256": null,
+  "encryptionScope": null,
+  "hasLegalHold": null,
+  "hasVersionsOnly": null,
+  "immutabilityPolicy": {
+    "expiryTime": null,
+    "policyMode": null
+  },
+  "isAppendBlobSealed": null,
+  "isCurrentVersion": null,
+  "lastAccessedOn": null,
+  "metadata": {},
+  "name": "meow_database_2025-11-06_19-53-24.tar.gz",
+  "objectReplicationDestinationPolicy": null,
+  "objectReplicationSourceProperties": [],
+  "properties": {
+    "appendBlobCommittedBlockCount": null,
+    "blobTier": null,
+    "blobTierChangeTime": null,
+    "blobTierInferred": null,
+    "blobType": "BlockBlob",
+    "contentLength": 984,
+    "contentRange": "bytes None-None/984",
+    "contentSettings": {
+      "cacheControl": null,
+      "contentDisposition": null,
+      "contentEncoding": null,
+      "contentLanguage": null,
+      "contentMd5": "Ozt+dJWDdKl9Tt4A8O8cZQ==",
+      "contentType": "application/x-tar"
+    },
+    "copy": {
+      "completionTime": null,
+      "destinationSnapshot": null,
+      "id": null,
+      "incrementalCopy": null,
+      "progress": null,
+      "source": null,
+      "status": null,
+      "statusDescription": null
+    },
+    "creationTime": "2025-11-06T19:53:25+00:00",
+    "deletedTime": null,
+    "etag": "\"0x8DE1D6E2642117C\"",
+    "lastModified": "2025-11-06T19:53:25+00:00",
+    "lease": {
+      "duration": null,
+      "state": "available",
+      "status": "unlocked"
+    },
+    "pageBlobSequenceNumber": null,
+    "pageRanges": null,
+    "rehydrationStatus": null,
+    "remainingRetentionDays": null,
+    "serverEncrypted": true
+  },
+  "rehydratePriority": null,
+  "requestServerEncrypted": true,
+  "snapshot": null,
+  "tagCount": null,
+  "tags": null,
+  "versionId": null
+}
+
+gusta@NATHANHOAMB:~$ ls | grep "meow"
+meow.txt
+meow_database_2025-11-06_19-53-24.tar.gz
+```
+
+## D. Service¶
+🌞 Ecrire un fichier /etc/systemd/system/db_backup.service
+
+```sh
+
 
 
 
