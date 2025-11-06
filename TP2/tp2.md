@@ -857,7 +857,93 @@ meow_database_2025-11-06_19-53-24.tar.gz
 -->> Dispo dans le depot git
 ```
 
+🌞 Tester
 
+```sh
+gusta@azure2:~$ sudo systemctl daemon-reload
+gusta@azure2:~$ sudo systemctl start backup
+Failed to start backup.service: Unit backup.service not found.
+gusta@azure2:~$ sudo systemctl start db_backup.service
+gusta@azure2:~$ sudo systemctl status db_backup.service
+○ db_backup.service - Backup Database to Azure Blob Storage
+     Loaded: loaded (/etc/systemd/system/db_backup.service; disabled; preset: enabled)
+     Active: inactive (dead)
+
+Nov 06 20:14:11 azure2 db_backup.sh[1951]:  Archive créée.
+Nov 06 20:14:11 azure2 db_backup.sh[1951]:  Upload de l'archive vers le Blob Storage...
+Nov 06 20:14:12 azure2 db_backup.sh[1960]: [166B blob data]
+Nov 06 20:14:13 azure2 db_backup.sh[1951]:  Upload terminé.
+Nov 06 20:14:13 azure2 db_backup.sh[1951]: Cleanup du ficher d'archive
+Nov 06 20:14:13 azure2 db_backup.sh[1951]: Fichier local /tmp/meow_database_2025-11-06_20->
+Nov 06 20:14:13 azure2 db_backup.sh[1951]: --- [db_backup.sh] Sauvegarde terminée avec suc>
+Nov 06 20:14:13 azure2 systemd[1]: db_backup.service: Deactivated successfully.
+Nov 06 20:14:13 azure2 systemd[1]: Finished db_backup.service - Backup Database to Azure B>
+Nov 06 20:14:13 azure2 
+```
+
+E. Timer¶
+🌞 Ecrire un fichier /etc/systemd/system/db_backup.timer
+
+```sh
+[Unit]
+Description=Sauvegarde de la DB toutes les 1 min
+
+[Timer]
+# Premier lancement 1 minutes après le boot
+OnBootSec=1min
+
+# Et ensuite, ça retrigger 1 minutes après que ça soit stopped
+OnUnitActiveSec=1min
+Unit=db_backup.service
+
+[Install]
+WantedBy=timers.target
+```
+
+🌞 Activer le Timer
+
+```sh
+gusta@azure2:~$ sudo nano /etc/systemd/system/db_backup.timer
+gusta@azure2:~$ sudo systemctl start db_backup.timer
+gusta@azure2:~$ sudo systemctl enable db_backup.timer
+Created symlink /etc/systemd/system/timers.target.wants/db_backup.timer → /etc/systemd/system/db_backup.timer.
+
+- C'est bien dans le Blob Storage
+gusta@NATHANHOAMB:~$ az storage blob list \
+  --account-name michkastorage \
+  --account-key "" \
+  --container-name blobmeowtp2 \
+  --output table
+  --auth-mode login
+
+Name                                      Blob Type    Blob Tier    Length    Content Type       Last Modified              Snapshot
+----------------------------------------  -----------  -----------  --------  -----------------  -------------------------  ----------
+meow.txt                                  BlockBlob    Hot          5         text/plain         2025-11-06T17:20:31+00:00
+meow_database_2025-11-06_19-53-24.tar.gz  BlockBlob    Hot          984       application/x-tar  2025-11-06T19:53:25+00:00
+meow_database_2025-11-06_20-14-10.tar.gz  BlockBlob    Hot          980       application/x-tar  2025-11-06T20:14:12+00:00
+
+```
+
+🌞 Attendre et observer
+
+ ```sh
+gusta@azure2:~$ sudo systemctl list-timers
+NEXT                           PASSED UNIT        >                 ACTIVATES
+   ESCOC                       
+-11-06 20:19:35 UTC      54s ago db_backup.timer                db_backup.service
+
+- c'est bien dans le Blob Storage
+gusta@NATHANHOAMB:~$ az storage blob list   --account-name michkastorage  --container-name blobmeowtp2    --output table --auth-mode login
+Name                                      Blob Type    Blob Tier    Length    Content Type       Last Modified              Snapshot
+----------------------------------------  -----------  -----------  --------  -----------------  -------------------------  ----------
+meow.txt                                  BlockBlob    Hot          5         text/plain         2025-11-06T17:20:31+00:00
+meow_database_2025-11-06_19-53-24.tar.gz  BlockBlob    Hot          984       application/x-tar  2025-11-06T19:53:25+00:00
+meow_database_2025-11-06_20-14-10.tar.gz  BlockBlob    Hot          980       application/x-tar  2025-11-06T20:14:12+00:00
+meow_database_2025-11-06_20-19-35.tar.gz  BlockBlob    Hot          982       application/x-tar  2025-11-06T20:19:36+00:00
+meow_database_2025-11-06_20-21-32.tar.gz  BlockBlob    Hot          980       application/x-tar  2025-11-06T20:21:34+00:00
+meow_database_2025-11-06_20-23-32.tar.gz  BlockBlob    Hot          980       application/x-tar  2025-11-06T20:23:34+00:00
+meow_database_2025-11-06_20-25-32.tar.gz  BlockBlob    Hot          980       application/x-tar  2025-11-06T20:25:34+00:00
+```
 
 
 
