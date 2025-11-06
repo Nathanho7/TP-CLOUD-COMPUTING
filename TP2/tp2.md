@@ -452,7 +452,7 @@ gusta@azure1:~$ ls -l /usr/local/bin | grep get_secrets
 ```
 
 * TEST
-
+  
 -Avant execution du script
 
 ```sh
@@ -467,13 +467,132 @@ DB_HOST=172.17.0.6
 DB_PORT=3306
 DB_NAME=meow_database
 DB_USER=meow
-DB_PASSWORD=t'as ce juice
-
+DB_PASSWORD=meowmeow
 ```
 - Après execution du script
   ```sh
+  gusta@azure1:~$ sudo /usr/local/bin/get_secrets.sh
+  [
+    {
+      "environmentName": "AzureCloud",
+      "id": "413600cf-bd4e-4c7c-8a61-69e73cddf731",
+      "isDefault": true,
+      "name": "N/A(tenant level account)",
+      "state": "Enabled",
+      "tenantId": "413600cf-bd4e-4c7c-8a61-69e73cddf731",
+      "user": {
+        "assignedIdentityInfo": "MSI",
+        "name": "systemAssignedIdentity",
+        "type": "servicePrincipal"
+      }
+    }
+  ]
+  DB_PASSWORD updated in .env
+  Verifying file contents:
+  # Flask Configuration
+  FLASK_SECRET_KEY=ewnFw95H7qBeGiVvkQl9YmnJohW6NCMMqR0arxfnWYASeCDvzwQwzLxMCboAOi3e
+  FLASK_DEBUG=False
+  FLASK_HOST=0.0.0.0
+  FLASK_PORT=8000
   
-  
+  # Database Configuration
+  DB_HOST=172.17.0.6
+  DB_PORT=3306
+  DB_NAME=meow_database
+  DB_USER=meow
+  DB_PASSWORD=meow
+  ```
+
+# B. Exécution automatique
+
+🌞 Ajouter le script en ExecStartPre= dans webapp.service
+
+```sh
+gusta@azure1:~$ sudo systemctl edit webapp.service
+ [Unit]
+ Description=Super Webapp MEOW
+
+ [Service]
+ User=webapp
+ WorkingDirectory=/opt/meow
+ ExecStartPre=/usr/local/bin/get_secrets.sh
+ ExecStart=/opt/meow/bin/python app.py
+
+ [Install]
+ WantedBy=multi-user.target
+
+gusta@azure1:~$ sudo systemctl daemon-reload
+gusta@azure1:~$ sudo systemctl restart webapp.service
+```
+
+  🌞 Prouvez que la ligne en ExecStartPre= a bien été exécutée
+
+  ```sh
+gusta@azure1:~$ sudo systemctl status webapp.service
+● webapp.service - Super Webapp MEOW
+     Loaded: loaded (/etc/systemd/system/webapp.service; disabled; preset: enabled)
+     Active: active (running) since Thu 2025-11-06 00:22:16 UTC; 1min 15s ago
+   Main PID: 17319 (python)
+      Tasks: 1 (limit: 978)
+     Memory: 61.0M (peak: 62.6M)
+        CPU: 697ms
+     CGroup: /system.slice/webapp.service
+             └─17319 /opt/meow/bin/python app.py
+```
+
+# C. Secret Flask
+
+🌞 Intégrez la gestion du secret Flask dans votre script get_secrets.sh
+
+```sh
+gusta@azure1:~$ NEW_FLASK_KEY=$(openssl rand -hex 32)
+gusta@azure1:~$ az keyvault secret set --vault-name conorVault --name faikkoFlask --value "$NEW_FLASK_KEY"
+{
+  "attributes": {
+    "created": "2025-11-06T00:34:25+00:00",
+    "enabled": true,
+    "expires": null,
+    "notBefore": null,
+    "recoverableDays": 90,
+    "recoveryLevel": "Recoverable+Purgeable",
+    "updated": "2025-11-06T00:34:25+00:00"
+  },
+  "contentType": null,
+  "id": "https://conorvault.vault.azure.net/secrets/faikkoFlask/e4fa4390a28d4aa3a51351c3cfc30c86",
+  "kid": null,
+  "managed": null,
+  "name": "faikkoFlask",
+  "tags": {
+    "file-encoding": "utf-8"
+  },
+  "value": "2cc0c5b785f5616c13d985b6b55b9e706b1f3a272fde4e21389dfd23d513af0c"
+}
+```
+
+
+  🌞 Redémarrer le service
+
+  ```sh
+gusta@azure1:~$ sudo /usr/local/bin/get_secrets.sh
+--- [get_secrets.sh] Démarrage du script ---
+[get_secrets.sh] Connexion réussie.
+[get_secrets.sh] Secret 'DBPASSWORD' récupéré.
+[get_secrets.sh] Secret 'faikkoFlask' récupéré.
+[get_secrets.sh] Mise à jour du fichier /opt/meow/.env...
+[get_secrets.sh] Fichier /opt/meow/.env mis à jour avec succès.
+# Flask Configuration
+FLASK_DEBUG=False
+FLASK_HOST=0.0.0.0
+FLASK_PORT=8000
+
+# Database Configuration
+DB_HOST=172.17.0.6
+DB_PORT=3306
+DB_NAME=meow_database
+DB_USER=meow
+
+[get_secrets.sh] --- Script terminé ---
+```
   
   
 
