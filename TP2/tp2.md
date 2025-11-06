@@ -594,7 +594,15 @@ DB_USER=meow
 [get_secrets.sh] --- Script terminé ---
 ```
   
-  
+
+  # IV. Blob Storage
+
+ ##  1. Un premier ptit blobz
+
+ 🌞 Upload un fichier dans le Blob Container depuis azure2.tp2
+
+ ```sh
+
 
 
 
