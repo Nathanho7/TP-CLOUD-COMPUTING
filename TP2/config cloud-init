@@ -1,38 +1,25 @@
 ```sh
 #cloud-config
-disable_root: false
-system_info:
-  default_user:
-    name: gusta
-package_update: true
-packages:
-  - mysql-server
+  users:
+    - default
+    - name: gusta
+      sudo: ALL=(ALL) NOPASSWD:ALL
+      groups: sudo
+      shell: /bin/bash
+      ssh_authorized_keys:
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFKfNBsLGQIjr72g/O56IE6Ock8Xf6PQoYlOA66o0KO5
 
-users:
-  - name: gusta
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    groups: sudo
-    shell: /bin/bash
-    ssh_authorized_keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBy6spTiu6+2Hm8K94CNNJ7Z7OR3CiGkoTaAt0TBD7E+ gusta@NATHANHO_AMB
-
-  - name: meow
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    groups: sudo
-    shell: /bin/bash
-    ssh_authorized_keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBy6spTiu6+2Hm8K94CNNJ7Z7OR3CiGkoTaAt0TBD7E+ gusta@NATHANHO_AMB
 
 
 users:
   - name: gustanth
-    plain_text_passwd: gusta123
+    passwd: 380851912a9d1027ff6a6c017e9588faa6479297c0e43dd56fd55a91ac2da9c4
     lock_passwd: false
     sudo:  ALL=(ALL) NOPASSWD:ALL
     groups: sudo
     shell: /bin/bash
     ssh_authorized_keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBy6spTiu6+2Hm8K94CNNJ7Z7OR3CiGkoTaAt0TBD7E+ gusta@NATHANHO_AMB
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFKfNBsLGQIjr72g/O56IE6Ock8Xf6PQoYlOA66o0KO5
 write_files:
   - path: /tmp/init.sql
     permissions: '0644'
@@ -47,5 +34,3 @@ runcmd:
    systemctl start mysql
    mysql -u root < /tmp/init.sql
 ```
- 
-	
