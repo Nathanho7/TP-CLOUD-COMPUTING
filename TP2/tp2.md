@@ -126,8 +126,12 @@ az>> vm show -d -g Cloud_B2 -n azure1.tp1
 - Cloud-init.txt
   ```sh
   #cloud-config
-  users:
-    - default
+  disable_root: false
+  system_info:
+    default_user:
+      name: gusta
+  
+   users:
     - name: gusta
       sudo: ALL=(ALL) NOPASSWD:ALL
       groups: sudo
@@ -135,6 +139,7 @@ az>> vm show -d -g Cloud_B2 -n azure1.tp1
       ssh_authorized_keys:
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFKfNBsLGQIjr72g/O56IE6Ock8Xf6PQoYlOA66o0KO5
     ```
+
 Avec WSL
 
 ```sh
@@ -191,8 +196,7 @@ gusta@azure1:~$ ls -al /var/log/cloud-init*
 ```sh
 #cloud-config
 users:
-  - default
-  - name: gusta
+  - name: gustaa
     passwd: 910e5b66355abe4e675821357a313ec7
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: sudo
@@ -206,19 +210,18 @@ packages:
 
 write_files:
   - owner: root:root
-    path: /root
+   path: /tmp/init.sql
     content: |
       CREATE DATABASE meow_database;
       CREATE USER 'meow'@'%' IDENTIFIED BY 'meow';
       ALTER USER 'meow' IDENTIFIED BY 'meow';
       GRANT ALL ON meow_database.* TO 'meow'@'%';
       FLUSH PRIVILEGES;
-
 runcmd:
-  - systemctl start mysql
-  - until mysqladmin ping --silent; do sleep 5; done
-  - mysql -u root < /root/init.sql
-  - systemctl restart mysql
+  systemctl enable mysql
+   systemctl start mysql
+   mysql -u root < /tmp/init.sql
+
 ```
 
 
@@ -244,7 +247,7 @@ Selecting "northeurope" may reduce your costs. The region you've selected may 
 ```
 - CO SSH
   ```sh
-  PS C:\Users\gusta> ssh gusta@4.178.183.2
+  PS C:\Users\gusta> ssh gustaa@4.178.183.2
   The authenticity of host '4.178.183.2 (4.178.183.2)' can't be established.
   ED25519 key fingerprint is SHA256:KB/Zq3WVQ9EZjApHSu7+YM2tiK0RNKxFaKmeGjO55aA.
   This key is not known by any other names.
@@ -284,26 +287,25 @@ Selecting "northeurope" may reduce your costs. The region you've selected may 
   To run a command as administrator (user "root"), use "sudo <command>".
   See "man sudo_root" for details.
   
-  gusta@azure3:~$
-
-  gusta@azure3:~$ systemctl status mysql.service
+  gusta@azure3:~$ sudo mysql
   mysql> SHOW DATABASES;
-+--------------------+
-| Database           |
-+--------------------+
-| information_schema |
-| meow_database      |
-| mysql              |
-| performance_schema |
-| sys                |
-+--------------------+  
-    ```
+
+  +--------------------+
+  | Database           |
+  +--------------------+
+  | information_schema |
+  | meow_database      |
+  | mysql              |
+  | performance_schema |
+  | sys                |
+  +--------------------+  
+   ```
 
  
   # III. Gestion de secrets
 
   🌞 Récupérer votre secret depuis la VM
-  ```sh
+ ```sh
 PS C:\Users\gusta> ssh az1
 Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.14.0-1012-azure x86_64)
 
