@@ -195,6 +195,19 @@ gusta@azure1:~$ ls -al /var/log/cloud-init*
 
 ```sh
 #cloud-config
+ disable_root: false
+  system_info:
+    default_user:
+      name: gusta
+
+  users:
+    - name: gusta
+      sudo: ALL=(ALL) NOPASSWD:ALL
+      groups: sudo
+      shell: /bin/bash
+      ssh_authorized_keys:
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFKfNBsLGQIjr72g/O56IE6Ock8Xf6PQoYlOA66o0KO5
+
 users:
   - name: gustaa
     passwd: 910e5b66355abe4e675821357a313ec7
