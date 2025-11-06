@@ -1,29 +1,35 @@
 #!/bin/bash
 
-#Az authentification
-az login --identity --allow-no-subscriptions
+echo "--- [get_secrets.sh] Démarrage du script ---"
+
+az login --identity --allow-no-subscriptions > /dev/null
+echo " Connexion réussie."
+
+# --- 2. Configuration des noms ---
+KeyVaultName="conorVault"
+DBSecretName="DBPASSWORD"
+FlaskSecretName="faikkoFlask"    #
 
 
-# Name description
+# --- 3. Récupération des Secrets ---
+DB_VALUE=$(az keyvault secret show --vault-name "$KeyVaultName" --name "$DBSecretName" --query value -o tsv)
+echo "Secret '${DBSecretName}' récupéré."
 
-KeyVaultName="secrettVaultt"
-SecretName="DBPASSWORD"
-SecretName2="flasksecrett"
+FLASK_VALUE=$(az keyvault secret show --vault-name "$KeyVaultName" --name "$FlaskSecretName" --query value -o tsv)
+echo " Secret '${FlaskSecretName}' récupéré."
 
-#Recovery of secrecy
+# --- 4. Mise à jour du fichier .env ---
+ENV_FILE="/opt/meow/.env"
+echo " Mise à jour du fichier ${ENV_FILE}..."
 
-SECRET_VALUE=$(az keyvault secret show --vault-name "$KeyVaultName" --name "$SecretName" --query val>
+# Remplacer la ligne DB_PASSWORD
+sed -i "s!^DB_PASSWORD=.*!DB_PASSWORD=${DB_VALUE}!" $ENV_FILE
 
+sed -i "s!^FLASK_SECRET_KEY=.*!FLASK_SECRET_KEY=${FLASK_VALUE}!" $ENV_FILE
 
-#Replacement in.env file
-sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=$SECRET_VALUE/" /opt/meow/.env
+echo " Fichier ${ENV_FILE} mis à jour avec succès."
 
-echo " DB_PASSWORD updated in .env"
+# --- 5. Vérification (optionnelle mais recommandée) ---
+grep -v 'DB_PASSWORD\|FLASK_SECRET_KEY' $ENV_FILE
+echo " --- Script terminé ---"
 
-
-info "Simple flask secret recovery....."
-FLASK_SECRET=$(az keyvault secret show --vault-name "$KeyVaultName" --name "$SecretName2" --query va>
-echo "Good ! Lauching the injection of flask secret inside .env..."
-
-sed -i "s/^FLASK_SECRET_KEY=.*/FLASK_SECRET_KEY=${FLASK_SECRET}/" /opt/meow/.env
-echo "Good ! Ready to start the web server....."
