@@ -300,7 +300,7 @@ Selecting "northeurope" may reduce your costs. The region you've selected may 
   To run a command as administrator (user "root"), use "sudo <command>".
   See "man sudo_root" for details.
   
-  gusta@azure3:~$ sudo mysql
+  gustaa@azure3:~$ sudo mysql
   mysql> SHOW DATABASES;
 
   +--------------------+
